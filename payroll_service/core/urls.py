@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import EmployeeListCreateAPIView, EmployeeDetailAPIView, LeaveListCreateAPIView, LeaveDetailAPIView
+from .views import LoginUserAPIView
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,4 +16,9 @@ urlpatterns = [
     path('delete_employee/<int:employee_id>/', views.delete_employee, name='delete_employee'),
     path('view_employees/', views.view_employees, name='view_employees'),
     path('payroll/success/', views.payroll_success, name='payroll_success'),
+    path('employees/', EmployeeListCreateAPIView.as_view(), name='employee_list_create'),
+    path('employees/<int:pk>/', EmployeeDetailAPIView.as_view(), name='employee_detail'),
+    path('leaves/', LeaveListCreateAPIView.as_view(), name='leave_list_create'),
+    path('leaves/<int:pk>/', LeaveDetailAPIView.as_view(), name='leave_detail'),
+    path('login/', LoginUserAPIView.as_view(), name='login_user'),
 ]

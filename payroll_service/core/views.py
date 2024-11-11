@@ -5,6 +5,18 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import EmployeeSerializer
 from django.shortcuts import render, get_object_or_404, redirect
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Employee, Leave
+from .serializers import EmployeeSerializer, LeaveSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
+
 
 # View for employee list
 def index(request):
@@ -85,4 +97,118 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     permission_classes = [IsAuthenticated]
+
+
+
+# View to handle Employee CRUD
+class EmployeeListCreateAPIView(APIView):
+    def get(self, request):
+        employees = Employee.objects.all()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# View to handle a single Employee (Retrieve, Update, Delete)
+class EmployeeDetailAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            employee = Employee.objects.get(pk=pk)
+        except Employee.DoesNotExist:
+            return Response({'error': 'Employee not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        try:
+            employee = Employee.objects.get(pk=pk)
+        except Employee.DoesNotExist:
+            return Response({'error': 'Employee not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = EmployeeSerializer(employee, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        try:
+            employee = Employee.objects.get(pk=pk)
+        except Employee.DoesNotExist:
+            return Response({'error': 'Employee not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        employee.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# View to handle Leave CRUD
+class LeaveListCreateAPIView(APIView):
+    def get(self, request):
+        leaves = Leave.objects.all()
+        serializer = LeaveSerializer(leaves, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = LeaveSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# View to handle a single Leave (Retrieve, Update, Delete)
+class LeaveDetailAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            leave = Leave.objects.get(pk=pk)
+        except Leave.DoesNotExist:
+            return Response({'error': 'Leave request not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = LeaveSerializer(leave)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        try:
+            leave = Leave.objects.get(pk=pk)
+        except Leave.DoesNotExist:
+            return Response({'error': 'Leave request not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = LeaveSerializer(leave, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        try:
+            leave = Leave.objects.get(pk=pk)
+        except Leave.DoesNotExist:
+            return Response({'error': 'Leave request not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        leave.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LoginUserAPIView(APIView):
+    def post(self, request):
+        # Get the username and password from the request data
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        # Authenticate the user
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            # Generate the JWT token using SimpleJWT's RefreshToken
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),  # Refresh token
+                'access': str(refresh.access_token),  # Access token
+            })
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
