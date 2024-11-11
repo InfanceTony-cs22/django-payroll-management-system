@@ -59,8 +59,8 @@ ROOT_URLCONF = "payroll_service.urls"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Make sure 'templates' is correctly configured
-        'APP_DIRS': True,  # This enables the use of app-specific templates
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -71,6 +71,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = "payroll_service.wsgi.application"
 

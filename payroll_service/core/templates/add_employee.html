@@ -1,11 +1,15 @@
-<!-- templates/core/add_employee.html -->
-{% extends 'base_generic.html' %}
+
 
 {% block content %}
-  <h2>Add a New Employee</h2>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Employee</button>
-  </form>
+  <div class="container">
+    <h2 class="mt-4">Add a New Employee</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.as_p }}
+      </div>
+      <button type="submit" class="btn btn-success">Add Employee</button>
+    </form>
+    <a href="{% url 'view_employees' %}" class="btn btn-primary mt-3">Back to Employee List</a>
+  </div>
 {% endblock %}

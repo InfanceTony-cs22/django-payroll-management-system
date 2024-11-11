@@ -4,6 +4,7 @@ from .forms import LeaveForm, PayrollForm, EmployeeForm  # Import the EmployeeFo
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import EmployeeSerializer
+from django.shortcuts import render, get_object_or_404, redirect
 
 # View for employee list
 def index(request):
@@ -58,8 +59,23 @@ def payroll_success(request):
 def leave_request_success(request):
     return render(request, 'leave_request_success.html')  # Render the leave request success page
 
+def view_employees(request):
+    # Your logic to fetch and display employees
+    employees = Employee.objects.all()  # Replace with actual logic
+    return render(request, 'view_employees.html', {'employees': employees})
+
+def delete_employee(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    
+    if request.method == 'POST':
+        employee.delete()
+        return redirect('view_employees')  # Redirect to the employee list view after deletion
+    
+    return render(request, 'confirm_delete.html', {'employee': employee})
+
 # Employee API ViewSet for the API section
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     permission_classes = [IsAuthenticated]
+
