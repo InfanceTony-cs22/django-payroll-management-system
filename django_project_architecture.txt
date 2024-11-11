@@ -1,0 +1,81 @@
+
+payroll_service/                 # Project root directory
+├── manage.py                    # Django management script
+├── payroll_service/             # Project settings directory
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py              # Project settings (database, installed apps, etc.)
+│   ├── urls.py                  # Project-wide URLs
+│   ├── wsgi.py
+│   └── templates/               # Shared templates across the project
+│       ├── base.html            # Base template for inheritance
+│       ├── error_404.html       # Custom error page (404)
+│       └── error_500.html       # Custom error page (500)
+│
+├── core/                        # Core app (optional for shared models, middleware, etc.)
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py                  # Core URLs
+│   └── templates/core/          # Core-specific templates
+│
+├── user_management/             # User Management app
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py                # User models (if extending Django User)
+│   ├── views.py                 # Views for login, register, etc.
+│   ├── forms.py                 # User forms (registration, login)
+│   ├── urls.py                  # URLs for User Management
+│   └── templates/user_management/  # Templates for User Management
+│       ├── login.html
+│       ├── register.html
+│       └── profile.html
+│
+├── employee_management/         # Employee Management app
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py                # Employee models
+│   ├── views.py                 # Employee CRUD views
+│   ├── forms.py                 # Employee forms
+│   ├── urls.py                  # URLs for Employee Management
+│   └── templates/employee_management/  # Templates for Employee Management
+│       ├── employee_list.html
+│       ├── employee_detail.html
+│       └── employee_form.html
+│
+├── leave_management/            # Leave Management app
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py                # Leave request models
+│   ├── views.py                 # Leave request and approval views
+│   ├── forms.py                 # Forms for leave requests
+│   ├── urls.py                  # URLs for Leave Management
+│   └── templates/leave_management/  # Templates for Leave Management
+│       ├── leave_list.html
+│       ├── leave_request_form.html
+│       └── leave_approval.html
+│
+├── payroll_management/          # Payroll Management app
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py                # Payroll-related models
+│   ├── views.py                 # Payroll processing views
+│   ├── forms.py                 # Payroll forms
+│   ├── urls.py                  # URLs for Payroll Management
+│   └── templates/payroll_management/  # Templates for Payroll Management
+│       ├── payroll_status.html
+│       ├── payroll_history.html
+│       └── payroll_detail.html
+│
+├── static/                      # Static files (CSS, JS, images)
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+└── media/                       # Media files (uploaded files)

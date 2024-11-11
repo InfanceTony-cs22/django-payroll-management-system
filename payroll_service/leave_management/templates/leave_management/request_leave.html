@@ -1,0 +1,11 @@
+<!-- templates/leave_management/request_leave.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Request Leave</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Request Leave</button>
+  </form>
+{% endblock %}

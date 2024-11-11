@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Information</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Payroll Information</h1>
+        
+        <!-- Table to display payroll records -->
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Salary</th>
+                    <th>Bonus</th>
+                    <th>Pay Period</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payroll in payrolls %}
+                    <tr>
+                        <td>{{ payroll.employee.name }}</td>
+                        <td>{{ payroll.salary }}</td>
+                        <td>{{ payroll.bonus }}</td>
+                        <td>{{ payroll.pay_period }}</td>
+                        <td>{{ payroll.status }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No payroll records available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Optional: Add buttons or links for actions -->
+        <div class="actions">
+            <a href="{% url 'payroll_management:create_payroll' %}">Create Payroll</a>
+        </div>
+    </div>
+</body>
+</html>
