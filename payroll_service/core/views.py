@@ -73,6 +73,13 @@ def delete_employee(request, employee_id):
     
     return render(request, 'confirm_delete.html', {'employee': employee})
 
+def view_employees(request):
+    employees = Employee.objects.all()
+    return render(request, 'view_employees.html', {'employees': employees})
+
+def payroll_success(request):
+    return render(request, 'payroll_success.html')
+
 # Employee API ViewSet for the API section
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
