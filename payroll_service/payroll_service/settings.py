@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,8 +43,16 @@ INSTALLED_APPS = [
     'leave_management',  # Add this line if not already added
     'payroll_management',
     'rest_framework',
+    'django_celery_beat',
 
 ]
+
+CELERY_BEAT_SCHEDULE = {
+    'process-payroll-every-month': {
+        'task': 'payroll_management.tasks.process_payroll',
+        'schedule': crontab(day_of_month='1', hour=0, minute=0),  # Monthly on the 1st
+    },
+}
 
 
 MIDDLEWARE = [
@@ -60,7 +70,7 @@ ROOT_URLCONF = "payroll_service.urls"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Ensure this path points to the correct folder
+        'DIRS': [BASE_DIR / 'templates'],  # This should point to your templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,3 +154,5 @@ REST_FRAMEWORK = {
     
 }
 
+# Use Redis as the broker (instead of RabbitMQ)
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Default Redis URL

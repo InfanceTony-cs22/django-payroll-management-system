@@ -21,4 +21,7 @@ urlpatterns = [
     path('leaves/', LeaveListCreateAPIView.as_view(), name='leave_list_create'),
     path('leaves/<int:pk>/', LeaveDetailAPIView.as_view(), name='leave_detail'),
     path('login/', LoginUserAPIView.as_view(), name='login_user'),
+    path('employee/update/<int:pk>/', views.update_employee, name='update_employee'),
+    path('employee/delete/<int:pk>/', views.delete_employee, name='delete_employee'),
+    path('employee/update/<int:pk>/', views.update_employee, name='update_employee'),
 ]

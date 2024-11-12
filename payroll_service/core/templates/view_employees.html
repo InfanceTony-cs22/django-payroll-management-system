@@ -28,10 +28,9 @@
                     <td>
                         <a href="{% url 'leave_request' employee.id %}" class="btn btn-info btn-sm">Request Leave</a>
                         <a href="{% url 'payroll' employee.id %}" class="btn btn-primary btn-sm">Manage Payroll</a>
+                        <!-- Update button added here -->
+                        <a href="{% url 'update_employee' employee.id %}" class="btn btn-warning btn-sm">Update</a>
                         <a href="{% url 'delete_employee' employee.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this employee?');">Delete</a>
-                        <!-- In index.html or another relevant template -->
-                        
-
                     </td>
                 </tr>
                 {% endfor %}
