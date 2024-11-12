@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Employee, Leave, Payroll
 
+
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'department', 'job_title', 'salary')
