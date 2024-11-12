@@ -1,9 +1,9 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User  # Import the User model
 from .models import Employee, Leave
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer
 
 # Serializer for Employee model
 class EmployeeSerializer(serializers.ModelSerializer):

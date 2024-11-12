@@ -1,5 +1,7 @@
 from django.db import models
 from user_management.models import CustomUser  # Assuming CustomUser model is in user_management
+from django.utils import timezone
+
 
 class Payroll(models.Model):
     # Employee-related fields
@@ -13,8 +15,8 @@ class Payroll(models.Model):
     
     # Payroll date and status
     paid_date = models.DateField()
-    pay_period_start = models.DateField()  # Start date of the payroll period
-    pay_period_end = models.DateField()    # End date of the payroll period
+    pay_period_start = models.DateField(default=timezone.now)
+    pay_period_end = models.DateField(default=timezone.now)
     
     # Optional: Add a status to track payroll processing
     status = models.CharField(

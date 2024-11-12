@@ -1,14 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Employee, Leave, Payroll
-from .forms import LeaveForm, PayrollForm, EmployeeForm  # Import the EmployeeForm
+from .forms import LeaveForm, PayrollForm, EmployeeForm
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .serializers import EmployeeSerializer
-from django.shortcuts import render, get_object_or_404, redirect
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Employee, Leave
 from .serializers import EmployeeSerializer, LeaveSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,11 +11,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
 
-
 # View for employee list
 def index(request):
     employees = Employee.objects.all()
     return render(request, 'index.html', {'employees': employees})
+
 
 # View for adding a new employee
 def add_employee(request):
@@ -33,6 +27,7 @@ def add_employee(request):
     else:
         form = EmployeeForm()
     return render(request, 'add_employee.html', {'form': form})
+
 
 # View for creating leave requests
 def leave_request(request, employee_id):
@@ -47,6 +42,7 @@ def leave_request(request, employee_id):
     else:
         form = LeaveForm()
     return render(request, 'leave_request.html', {'form': form, 'employee': employee})
+
 
 # View for managing payroll
 def payroll(request, employee_id):
@@ -63,19 +59,24 @@ def payroll(request, employee_id):
         form = PayrollForm()
     return render(request, 'payroll.html', {'form': form, 'employee': employee})
 
+
 # Success view for payroll processing
 def payroll_success(request):
     return render(request, 'payroll_success.html')  # Render the payroll success page
+
 
 # Success view for leave request
 def leave_request_success(request):
     return render(request, 'leave_request_success.html')  # Render the leave request success page
 
+
+# View to list all employees
 def view_employees(request):
-    # Your logic to fetch and display employees
-    employees = Employee.objects.all()  # Replace with actual logic
+    employees = Employee.objects.all()
     return render(request, 'view_employees.html', {'employees': employees})
 
+
+# View for deleting an employee
 def delete_employee(request, employee_id):
     employee = get_object_or_404(Employee, id=employee_id)
     
@@ -85,12 +86,6 @@ def delete_employee(request, employee_id):
     
     return render(request, 'confirm_delete.html', {'employee': employee})
 
-def view_employees(request):
-    employees = Employee.objects.all()
-    return render(request, 'view_employees.html', {'employees': employees})
-
-def payroll_success(request):
-    return render(request, 'payroll_success.html')
 
 # Employee API ViewSet for the API section
 class EmployeeViewSet(viewsets.ModelViewSet):
@@ -99,8 +94,22 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+# View for updating an employee
+def update_employee(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
 
-# View to handle Employee CRUD
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST, instance=employee)
+        if form.is_valid():
+            form.save()
+            return redirect('view_employees')  # Redirect to employee list after updating
+    else:
+        form = EmployeeForm(instance=employee)
+    
+    return render(request, 'update_employee.html', {'form': form, 'employee': employee})
+
+
+# View to handle Employee CRUD (List and Create)
 class EmployeeListCreateAPIView(APIView):
     def get(self, request):
         employees = Employee.objects.all()
@@ -113,6 +122,7 @@ class EmployeeListCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # View to handle a single Employee (Retrieve, Update, Delete)
 class EmployeeDetailAPIView(APIView):
@@ -147,7 +157,7 @@ class EmployeeDetailAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# View to handle Leave CRUD
+# View to handle Leave CRUD (List and Create)
 class LeaveListCreateAPIView(APIView):
     def get(self, request):
         leaves = Leave.objects.all()
@@ -160,6 +170,7 @@ class LeaveListCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # View to handle a single Leave (Retrieve, Update, Delete)
 class LeaveDetailAPIView(APIView):
@@ -194,21 +205,18 @@ class LeaveDetailAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# View to handle user login and JWT token generation
 class LoginUserAPIView(APIView):
     def post(self, request):
-        # Get the username and password from the request data
         username = request.data.get('username')
         password = request.data.get('password')
 
-        # Authenticate the user
         user = authenticate(username=username, password=password)
 
         if user is not None:
-            # Generate the JWT token using SimpleJWT's RefreshToken
             refresh = RefreshToken.for_user(user)
             return Response({
                 'refresh': str(refresh),  # Refresh token
                 'access': str(refresh.access_token),  # Access token
             })
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
